@@ -15,7 +15,6 @@ import {
   DialogActions,
   TextField,
   MenuItem,
-  Fab,
 } from '@mui/material';
 import {
   Add,
@@ -25,7 +24,7 @@ import {
   Speed,
   Person,
 } from '@mui/icons-material';
-import { useState as useStateHook } from 'react';
+import AutocompleteField from '../components/AutocompleteField';
 
 const VehiclesPage = () => {
   const [vehicles, setVehicles] = useState([
@@ -87,6 +86,12 @@ const VehiclesPage = () => {
     owner: '',
     notes: '',
   });
+
+  // Extract unique values for autocomplete options
+  const makeOptions = [...new Set(vehicles.map(v => v.make))];
+  const modelOptions = [...new Set(vehicles.map(v => v.model))];
+  const engineOptions = [...new Set(vehicles.map(v => v.engineType))];
+  const ownerOptions = [...new Set(vehicles.map(v => v.owner))];
 
   const handleOpenDialog = (vehicle = null) => {
     if (vehicle) {
@@ -176,9 +181,9 @@ const VehiclesPage = () => {
             <Typography variant="body2" color="text.secondary" gutterBottom>
               Engine: {vehicle.engineType}
             </Typography>
-            <Chip
-              label={vehicle.transmission}
-              size="small"
+            <Chip 
+              label={vehicle.transmission} 
+              size="small" 
               variant="outlined"
               sx={{ mb: 1 }}
             />
@@ -226,19 +231,23 @@ const VehiclesPage = () => {
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
+              <AutocompleteField
                 label="Make"
                 value={formData.make}
-                onChange={(e) => setFormData({ ...formData, make: e.target.value })}
+                onChange={(value) => setFormData({ ...formData, make: value })}
+                options={makeOptions}
+                placeholder="e.g., Toyota, Honda, Ford"
+                required
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
+              <AutocompleteField
                 label="Model"
                 value={formData.model}
-                onChange={(e) => setFormData({ ...formData, model: e.target.value })}
+                onChange={(value) => setFormData({ ...formData, model: value })}
+                options={modelOptions}
+                placeholder="e.g., Camry, Civic, F-150"
+                required
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -248,6 +257,7 @@ const VehiclesPage = () => {
                 type="number"
                 value={formData.year}
                 onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+                required
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -256,6 +266,7 @@ const VehiclesPage = () => {
                 label="Registration"
                 value={formData.rego}
                 onChange={(e) => setFormData({ ...formData, rego: e.target.value })}
+                required
               />
             </Grid>
             <Grid item xs={12}>
@@ -267,11 +278,12 @@ const VehiclesPage = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
+              <AutocompleteField
                 label="Engine Type"
                 value={formData.engineType}
-                onChange={(e) => setFormData({ ...formData, engineType: e.target.value })}
+                onChange={(value) => setFormData({ ...formData, engineType: value })}
+                options={engineOptions}
+                placeholder="e.g., V6 3.5L, 4-Cyl 1.5L Turbo"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -297,11 +309,12 @@ const VehiclesPage = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
+              <AutocompleteField
                 label="Owner"
                 value={formData.owner}
-                onChange={(e) => setFormData({ ...formData, owner: e.target.value })}
+                onChange={(value) => setFormData({ ...formData, owner: value })}
+                options={ownerOptions}
+                placeholder="Select or add new owner"
               />
             </Grid>
             <Grid item xs={12}>

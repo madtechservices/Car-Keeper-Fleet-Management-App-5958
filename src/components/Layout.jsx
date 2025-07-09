@@ -16,6 +16,7 @@ import {
   MenuItem,
   useTheme,
   useMediaQuery,
+  Divider,
 } from '@mui/material';
 import {
   Dashboard as DashboardIcon,
@@ -28,6 +29,8 @@ import {
   Menu as MenuIcon,
   AccountCircle,
   Logout,
+  Settings,
+  Help,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -43,6 +46,12 @@ const menuItems = [
   { text: 'Upcoming Service', icon: <Schedule />, path: '/upcoming-service' },
   { text: 'Part Finder', icon: <Search />, path: '/part-finder' },
 ];
+
+const adminMenuItems = [
+  { text: 'Settings', icon: <Settings />, path: '/settings' },
+];
+
+const helpMenuItem = { text: 'Help', icon: <Help />, path: '/help' };
 
 const Layout = ({ children }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -70,6 +79,8 @@ const Layout = ({ children }) => {
     handleMenuClose();
   };
 
+  const isAdmin = user?.role === 'admin';
+
   const drawer = (
     <Box>
       <Toolbar>
@@ -95,6 +106,52 @@ const Layout = ({ children }) => {
             </ListItemButton>
           </ListItem>
         ))}
+        
+        {isAdmin && (
+          <>
+            <Divider sx={{ my: 1 }} />
+            <ListItem>
+              <ListItemText 
+                primary="Admin" 
+                sx={{ 
+                  color: 'text.secondary',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }} 
+              />
+            </ListItem>
+            {adminMenuItems.map((item) => (
+              <ListItem key={item.text} disablePadding>
+                <ListItemButton
+                  selected={location.pathname === item.path}
+                  onClick={() => {
+                    navigate(item.path);
+                    if (isMobile) setMobileOpen(false);
+                  }}
+                >
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </>
+        )}
+
+        <Divider sx={{ my: 1 }} />
+        <ListItem disablePadding>
+          <ListItemButton
+            selected={location.pathname === helpMenuItem.path}
+            onClick={() => {
+              navigate(helpMenuItem.path);
+              if (isMobile) setMobileOpen(false);
+            }}
+          >
+            <ListItemIcon>{helpMenuItem.icon}</ListItemIcon>
+            <ListItemText primary={helpMenuItem.text} />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
@@ -166,7 +223,10 @@ const Layout = ({ children }) => {
           }}
           sx={{
             display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+            },
           }}
         >
           {drawer}
@@ -175,7 +235,10 @@ const Layout = ({ children }) => {
           variant="permanent"
           sx={{
             display: { xs: 'none', md: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+            },
           }}
           open
         >

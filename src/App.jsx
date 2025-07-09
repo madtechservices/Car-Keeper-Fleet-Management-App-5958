@@ -11,6 +11,8 @@ import ServiceLogsPage from './pages/ServiceLogsPage';
 import FuelLogsPage from './pages/FuelLogsPage';
 import PartFinderPage from './pages/PartFinderPage';
 import UpcomingServicePage from './pages/UpcomingServicePage';
+import SettingsPage from './pages/SettingsPage';
+import HelpPage from './pages/HelpPage';
 
 function App() {
   const { user, loading } = useAuth();
@@ -37,6 +39,10 @@ function App() {
         <Route path="/fuel-logs" element={<FuelLogsPage />} />
         <Route path="/upcoming-service" element={<UpcomingServicePage />} />
         <Route path="/part-finder" element={<PartFinderPage />} />
+        <Route path="/help" element={<HelpPage />} />
+        {user?.role === 'admin' && (
+          <Route path="/settings" element={<SettingsPage />} />
+        )}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
